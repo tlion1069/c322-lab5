@@ -24,7 +24,40 @@
         let duck = { id: duckId, type: duckType };
         console.log("You entered:" + JSON.stringify(duck));
 
-        //TODO
+        let request = {
+          method: "POST",
+          headers:{
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(duck)
+        };
+        let response = await fetch(host + "/ducks", request);
+        if(response.status == 200){
+          let result = await submitTheImage();
+          if(result){
+          message = "The duck was added successfully!";
+          }
+          else {
+            message = "An Error Occurred regarding to duck image";
+          }
+        } else{
+          console.log(response);
+          message = "An Error occurred.";
+        }
+        alert(message);
+      }
+      async function submitTheImage(){
+        let duckId = document.getElementById("id").value;
+        let imageInput = document.getElementById("imageInput");
+        let formData = new FormData();
+        formData.append("file", imageInput.files[0]);
+        let request = {
+          method: "POST",
+          body: formData
+        };
+        let response = await fetch(host + "/ducks/" + duckId + "/image", request);
+        let result = await response.json();
+        return result;
       }
     </script>
   </body>

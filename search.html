@@ -45,13 +45,27 @@
     </table>
 
     <script>
-       let ducks = [
-        { id: 1, type: "Mallard" },
-        { id: 2, type: "Redhead" },
-        { id: 3, type: "Decoy" },
-      ];
+       let ducks = [];
+       async function getAll(){
+       let host = "http://localhost:8080";
+       let request = {
+        method: "GET"
+       };
+       let response = await fetch(host + "/ducks", request);
+       if(response.status == 200){
+          return await response.json();
+          
+        } else{
+          console.log(response);
+          message = "Could not get list of ducks";
+        }
 
-      async function search() {    
+       }
+      async function search() {
+        if(ducks.length == 0){
+          ducks = await getAll();
+          alert(JSON.stringify(ducks))
+        }
 
         let duckType = document.getElementById("type").value;
         let table = document.getElementById("result");
